@@ -1,0 +1,6 @@
+
+# 主要介绍Anaconda、Pycharm两个IDE环境的安装以及深度学习包的下载。
+conda create -n TF2.1 python = 3.7
+conda install cudatoolkit
+conda install cudnn 
+conda install TensorFlow
