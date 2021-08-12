@@ -47,28 +47,31 @@ b1 = tf.Variable(tf.constant(0.01, shape=[11]))
 w2 = tf.Variable(tf.random.normal([11, 1]), dtype=tf.float32)
 b2 = tf.Variable(tf.constant(0.01, shape=[1]))
 
-lr = 0.005
-epoch = 800
+lr = 0.01
+epoch = 400
 
 
 #   训练部分
 for epoch in range(epoch):
     for step, (x_train, y_train) in enumerate(train_db):
         with tf.GradientTape() as tape:
+
             h1 = tf.matmul(x_train, w1) + b1
             h1 = tf.nn.relu(h1)
             y = tf.matmul(h1, w2) + b2
 
             #   均方误差MSE
-            loss_mse = tf.reduce_mean(tf.square(y_train, y))
+            loss = tf.reduce_mean(tf.square(y_train - y))
 
-            loss_regularization= []
-            loss.append(tf.nn.l2_loss(w1))
-            loss_regularization.append(tf.nn.l2_loss(w2))
-            loss_regularization = tf.reduce_sum(loss_regularization)
-            loss = loss_mse + 0.03 * loss_regularization
+            #   添加正则化项
+            # loss_regularization= []
+            # # loss.append(tf.nn.l2_loss(w1))
+            # loss_regularization.append(tf.nn.l2_loss(w2))
+            # loss_regularization = tf.reduce_sum(loss_regularization)
+            # loss = loss_mse + 0.03 * loss_regularization
         variables = [w1, b1, w2, b2]
         grads = tape.gradient(loss, variables)
+        # print(grads)
 
         #   参数更新
         w1.assign_sub(lr * grads[0])
