@@ -33,7 +33,7 @@
 #   Metrics可选:
 #       'accuracy':y_和y都是数值。如y_=[1] y=[1]
 #       'categorical_accuracy':y_和y都是独热码（概率分布）,如y_=[0,1,0] y=[0.256,0.695,0.048]
-#       'sparse_categorical_accuracy':y_是数值,y是独热码（概率分布）如：y_=[1] y=[0.256,0.695,0.048]
+#       'sparse_categorical_accuracy':y_是数值,y是独热码（概率分布）如：y_=[1] y=[0.256,0.695,0.048]  鸢尾花标签为0、1、2，预测结果经过softmax为概率值，通常评价指标选择sparse_categorical_accuracy
 
 
 #   model.fit(训练集的输入特征,训练集的标签,batch_size=, epochs=, validation_data=(测试的输入特征,测试集的标签),
