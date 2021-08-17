@@ -49,20 +49,6 @@ from sklearn.datasets import load_iris
 import numpy as np
 
 
-
-#   __init__ 定义所需网络结构块   call 写出前向传播
-class MyModel(Model):
-    def __init__(self):
-        super(MyModel, self).__init__()
-        self.d1 = Dense(3)  #   定义网络结构快
-        def call(self, x):
-            y = self.d1(x)  # 调用网络结构块,实现前向传播
-            return y
-
-model = MyModel()
-
-
-
 x_train = load_iris().data
 y_train = load_iris().target
 
@@ -71,7 +57,19 @@ np.random.seed(116)
 np.random.shuffle(y_train)
 tf.random.set_seed(116)
 
-model = tf.keras.models.Sequential([tf.keras.layers.Dense(3,activation='softmax',kernel_regularizer=tf.keras.regularizers.l2())])
+#   __init__ 定义所需网络结构块   call 写出前向传播  Sequential主要用于上层输出就是下层输入的顺序结构。
+#   无法写出一些带有跳链的非顺序结构，此时需要选择用类class搭建神经网络
+class MyModel(Model):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        self.d1 = Dense(3, activation='sigmoid', kernel_regularizer=tf.keras.regularizers.l2())  #   定义网络结构快
+    def call(self, x):
+        y = self.d1(x)  # 调用网络结构块,实现前向传播
+        return y
+
+
+# model = tf.keras.models.Sequential([tf.keras.layers.Dense(3,activation='softmax',kernel_regularizer=tf.keras.regularizers.l2())])
+model = MyModel()
 model.compile(optimizer=tf.keras.optimizers.SGD(lr=0.1),loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['sparse_categorical_accuracy'])
 model.fit(x_train, y_train, batch_size=32, epochs=500, validation_split=0.2, validation_freq=20)
