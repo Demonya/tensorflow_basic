@@ -136,7 +136,7 @@ plt.show()
 # predict
 predicted_stock_price = model.predict(x_test)
 predicted_stock_price = sc.inverse_transform(predicted_stock_price)
-real_stock_price = sc.inverse_transform(test_set_scaled[60:])
+real_stock_price = sc.inverse_transform(test_set[60:])
 
 plt.plot(real_stock_price, color='red', label='MaoTai Stock Price')
 plt.plot(predicted_stock_price, color='blue', label='MaoTai Stock Predict Price')
