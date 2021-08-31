@@ -56,17 +56,17 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import math
 
-df1 = ts.get_k_data('600100', ktype='D', start='2010-04-26', end='2021-08-31')
-df1.to_csv('./SH600100.csv')
+df1 = ts.get_k_data('600519', ktype='D', start='2010-04-26', end='2021-08-31')
+df1.to_csv('./SH600519.csv')
 
-maotai = pd.read_csv('./SH600100.csv')
+maotai = pd.read_csv('./SH600519.csv')
 
 training_set = maotai.iloc[0:2826 - 300, 2:3].values
-test_set = maotai.iloc[2826-300:, 2:3]
+test_set = maotai.iloc[2826-300:, 2:3].values
 
 sc = MinMaxScaler(feature_range=(0, 1))
 training_set_scaled = sc.fit_transform(training_set)
-test_set_scaled = sc.transform(test_set)
+test_set = sc.transform(test_set)
 
 x_train, y_train, x_test, y_test = [], [], [], []
 
@@ -81,11 +81,11 @@ np.random.shuffle(y_train)
 tf.random.set_seed(7)
 
 x_train, y_train = np.array(x_train), np.array(y_train)
-x_train = np.reshape(x_train, (len(x_train), 60, 1))
+x_train = np.reshape(x_train, (x_train.shape[0], 60, 1))
 
-for i in range(60, len(test_set_scaled)):
-    x_test.append(test_set_scaled[i - 60:i, 0])
-    y_test.append(test_set_scaled[i, 0])
+for i in range(60, len(test_set)):
+    x_test.append(test_set[i - 60:i, 0])
+    y_test.append(test_set[i, 0])
 
 x_test, y_test = np.array(x_test), np.array(y_test)
 x_test = np.reshape(x_test, (x_test.shape[0], 60, 1))
@@ -101,7 +101,7 @@ model = tf.keras.Sequential([
 model.compile(optimizer=tf.keras.optimizers.Adam(0.001),
               loss='mean_squared_error')   # 损失函数为均方误差
 #   该应用只观测loss数值,不观测准确率,所以删去metrics选项,在后续的epoch迭代中只显示loss值
-checkpoint_save_path = './rnn_stock/stock.ckpt'
+checkpoint_save_path = './LSTM_stock/LSTM_stock.ckpt'
 
 if os.path.exists(checkpoint_save_path + '.index'):
     print('------------Loading Model-------------')
